@@ -22,27 +22,41 @@ export interface Env {
   // MY_SERVICE: Fetcher;
 }
 
+const WEBSITE_HOSTS = {
+  1: "reverse-proxy-project-1.pages.dev",
+  2: "reverse-proxy-remix-project-2.pages.dev",
+};
 export default {
   async fetch(
     request: Request,
     env: Env,
     ctx: ExecutionContext
   ): Promise<Response> {
-    const url = new URL(request.url);
+    const newRequest = getNewRequest(request);
 
-    url.host = "reverse-proxy-project-1.pages.dev";
-
-    const newHeaders = new Headers(request.headers);
-
-    newHeaders.set("x-orignal-url", request.url);
-
-    const newRequest = new Request(
-      url.toString(),
-      new Request(request, { headers: newHeaders })
-    );
-
-    const data = await fetch(url.toString(), newRequest);
+    const data = await fetch(newRequest.url, newRequest);
 
     return data;
   },
 };
+
+function isWebsite1(url: URL) {
+  return url.pathname.startsWith("/1/");
+}
+
+function getNewRequest(request: Request) {
+  const requestUrl = new URL(request.url);
+
+  const newUrl = new URL(request.url);
+
+  newUrl.host = isWebsite1(requestUrl) ? WEBSITE_HOSTS[1] : WEBSITE_HOSTS[2];
+
+  const newHeaders = new Headers(request.headers);
+
+  newHeaders.set("x-original-url", request.url);
+
+  return new Request(
+    newUrl.toString(),
+    new Request(request, { headers: newHeaders })
+  );
+}
