@@ -10,5 +10,8 @@
   "scripts": {
     "start": "wrangler dev",
     "deploy": "wrangler publish"
+  },
+  "dependencies": {
+    "reflare": "^1.1.4"
   }
 }

@@ -1,3 +1,7 @@
 name = "reverse-proxy"
 main = "src/index.ts"
 compatibility_date = "2023-04-09"
+ 
+# kv_namespaces = [
+#  { binding = "MAGIC_REVERSE_PROXY", id = "9f6b479b5682432e8dc7cf126cad5929", preview_id = "c9259c158f53448aa824e031a19bfe69" }
+# ]
